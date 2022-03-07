@@ -8,4 +8,5 @@ import com.projecto.java.model.Cliente;
 @Repository
 public interface ClienteRepository extends CrudRepository<Cliente, Long>{
 
+	public Cliente findByNombre(String nombre);
 }
