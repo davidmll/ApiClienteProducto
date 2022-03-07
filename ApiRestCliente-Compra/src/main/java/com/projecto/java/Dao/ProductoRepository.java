@@ -8,4 +8,5 @@ import com.projecto.java.model.Producto;
 @Repository
 public interface ProductoRepository  extends CrudRepository<Producto, Long>{
 
+	public Producto findByNombre(String nombre);
 }

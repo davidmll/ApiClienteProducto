@@ -28,6 +28,20 @@ public class Cliente implements Serializable{
 	private char sexo;
 	
 	private int telefono;	
+	
+	
+	
+	
+
+	public Cliente() {
+	}
+
+	public Cliente(String nombre, String apellidos, char sexo, int telefono) {
+		this.nombre = nombre;
+		this.apellidos = apellidos;
+		this.sexo = sexo;
+		this.telefono = telefono;
+	}
 
 	public Long getId() {
 		return id;
