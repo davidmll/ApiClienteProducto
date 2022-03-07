@@ -7,5 +7,5 @@ import com.projecto.java.model.Venta;
 
 @Repository
 public interface VentasRepository extends CrudRepository<Venta, Long> {
-
+	public Venta findByCantidad(int cantidad);
 }

@@ -10,9 +10,9 @@ public interface VentaService {
 
 	public List<Venta> findAllVentas();
 
-	public Venta findById(Long id);
+	public Venta findByFolio(Long folio);
 
 	public Venta saveVenta(Venta venta);
 	
-	public void deleteVenta(Long id);
+	public void deleteVenta(Long folio);
 }

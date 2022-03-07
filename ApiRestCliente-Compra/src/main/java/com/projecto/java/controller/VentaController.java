@@ -1,156 +1,114 @@
 package com.projecto.java.controller;
 
 import java.util.HashMap;
-import java.util.List;
+
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.projecto.java.model.Venta;
+
 import com.projecto.java.service.VentaService;
 
-
-
-@RestController
+@Controller
 @RequestMapping("/api")
 public class VentaController {
 
 	@Autowired
-	private VentaService servicio;
+	private VentaService service;
+
+//	Peticion get
 
 	@GetMapping("/ventas")
-	public List<Venta> index() {
-		return servicio.findAllVentas();
+	public String producto(Model model) {
+		model.addAttribute("info", service.findAllVentas());
+
+		return "venta";
 	}
 
-	@GetMapping("/ventas/{id}")
-	public ResponseEntity<?> findVentaById(@PathVariable Long id) {
+	@GetMapping("venta/{folio}")
+	public ResponseEntity<?> findVentaByFolio(@PathVariable Long folio) {
 
 		Venta venta = null;
+
 		Map<String, Object> response = new HashMap<>();
 
 		try {
-			venta = servicio.findById(id);
+
+			venta = service.findByFolio(folio);
 
 		} catch (DataAccessException e) {
-			
-			response.put("mensaje", "Error al realizar consulta a base de datos");
+
+			response.put("mensaje", "Error al realizar la consulta");
 			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
 
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 		if (venta == null) {
-
-			response.put("mensaje", "La venta ID: ".concat(id.toString().concat("no existe en la base de datos")));
-
+			response.put("mensaje", "La venta ID: " + folio + " no existe en la base de datos");
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
 		}
 
 		return new ResponseEntity<Venta>(venta, HttpStatus.OK);
-	}	
-
-	@PostMapping("/venta")
-	public ResponseEntity<?> saveCliente(@RequestBody Venta venta) {
-
-		Venta ventaNew = null;
-		Map<String, Object> response = new HashMap<>();
-
-		try {
-
-			venta = servicio.saveVenta(ventaNew);
-
-		} catch (DataAccessException e) {
-			
-			response.put("mensaje", "Error al realizar un insert a la base de datos");
-			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
-
-			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-
-		response.put("mensaje", "La venta ha sido creado con éxito");
-		response.put("venta", ventaNew);
-
-		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
 
 	}
 
-	@PutMapping("/venta/{id}")
-	public ResponseEntity<?> updateVenta(@RequestBody Venta venta, @PathVariable Long id) {
+	@GetMapping("/venta/nuevo_venta")
+	public String crearVenta(Model model) {
+		Venta v = new Venta();
+		model.addAttribute("keyventa", v);
 
-		Map<String, Object> response = new HashMap<>();
-		Venta ventaActual = servicio.findById(id);
-
-		if (ventaActual == null) {
-
-			response.put("mensaje",
-					"Error: no se pudo editar, la venta con ID: " + id.toString() + "no existe en la BBDD");
-			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
-
-		}
-
-		try {
-			ventaActual.setProducto(venta.getProducto());
-			ventaActual.setIva(venta.getIva());
-			ventaActual.setCantidad(venta.getCantidad());
-			ventaActual.setSubTotal(venta.getSubTotal());
-			ventaActual.setTotal(venta.getTotal());
-			ventaActual.setCliente(venta.getCliente());
-
-			servicio.saveVenta(ventaActual);
-
-		} catch (DataAccessException e) {
-			
-			response.put("mensaje", "Error al realizar un update a la base de datos");
-			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
-
-			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-		response.put("mensaje", "La venta ha sido actualizada con éxito");
-		response.put("venta", ventaActual);
-
-		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
+		return "nuevo_venta";
 	}
 
-	@DeleteMapping("/venta/{id}")
-	public ResponseEntity<?> deleteVenta(@PathVariable Long id) {
-		Map<String, Object> response = new HashMap<>();
-		Venta ventaActual = servicio.findById(id);
+	@GetMapping("/venta/editar/{folio}")
+	public String findByFolio(@PathVariable Long folio, Model modelo) {
+		modelo.addAttribute("keyventa", service.findByFolio(folio));
 
-		if (ventaActual == null) {
-
-			response.put("mensaje",
-					"Error: no se pudo editar, la venta con ID: " + id.toString() + "no existe en la BBDD");
-			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
-		}
-
-		try {
-			servicio.deleteVenta(id);
-
-		} catch (DataAccessException e) {
-			
-			response.put("mensaje", "Error al realizar un delete a la base de datos");
-			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
-
-			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-		} 
-
-		response.put("venta", ventaActual);
-		response.put("mensaje", "Se ha borrado con exito la venta");
-
-		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
+		return "editar_venta";
 	}
+
+//	Method post
+
+	@PostMapping("/ventas")
+	public String guardarDepartamento(@ModelAttribute("keyventa") Venta venta) {
+		service.saveVenta(venta);
+		return "redirect:/api/ventas";
+	}
+
+	@PostMapping("/venta/{folio}")
+	public String updateVenta(@PathVariable Long folio, @ModelAttribute("keyventa") Venta venta) {
+
+		Venta ventaActual = service.findByFolio(folio);
+
+		ventaActual.setFolio(folio);
+		ventaActual.setCantidad(venta.getCantidad());
+		ventaActual.setSubTotal(venta.getSubTotal());
+		ventaActual.setIva(venta.getIva());
+		ventaActual.setTotal(venta.getTotal());
+
+		service.saveVenta(ventaActual);
+
+		return "redirect:/api/ventas";
+	}
+
+	@GetMapping("/venta/eliminar/{folio}")
+	public String eliminarVenta(@PathVariable Long folio) {
+		service.deleteVenta(folio);
+		return "redirect:/api/ventas";
+	}
+
 }
-
-

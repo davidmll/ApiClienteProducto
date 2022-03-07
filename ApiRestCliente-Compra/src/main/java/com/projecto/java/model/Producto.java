@@ -28,6 +28,16 @@ public class Producto implements Serializable{
 	
 	
 	
+	
+	
+	public Producto() {
+	}
+	public Producto(String nombre, String descripcion, double precioUnitario, int existencias) {
+		this.nombre = nombre;
+		this.descripcion = descripcion;
+		this.precioUnitario = precioUnitario;
+		this.existencias = existencias;
+	}
 	public Long getId() {
 		return id;
 	}
