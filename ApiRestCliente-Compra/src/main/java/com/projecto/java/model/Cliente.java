@@ -66,8 +66,4 @@ public class Cliente implements Serializable{
 	public void setTelefono(int telefono) {
 		this.telefono = telefono;
 	}
-	
-	
-	
-	
 }
