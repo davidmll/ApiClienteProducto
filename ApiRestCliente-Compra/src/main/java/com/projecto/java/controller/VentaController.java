@@ -144,7 +144,7 @@ public class VentaController {
 			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
 
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+		} 
 
 		response.put("venta", ventaActual);
 		response.put("mensaje", "Se ha borrado con exito la venta");
