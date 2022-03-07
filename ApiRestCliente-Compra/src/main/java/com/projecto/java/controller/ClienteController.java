@@ -28,7 +28,7 @@ public class ClienteController {
 	@Autowired
 	private ClienteService servicio;
 
-	@GetMapping({ "/clientes" })
+	@GetMapping("/clientes")
 	public List<Cliente> index() {
 
 		return servicio.findAll();

@@ -29,7 +29,7 @@ public class VentaController {
 	@Autowired
 	private VentaService servicio;
 
-	@GetMapping({ "/ventas" })
+	@GetMapping("/ventas")
 	public List<Venta> index() {
 		return servicio.findAllVentas();
 	}
