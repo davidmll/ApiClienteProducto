@@ -10,12 +10,12 @@
 </head>
 <body>
 	<nav class="nav">
-<!-- 		<a class="nav-link" aria-current="page" th:href="@{/empleado}">Empleados</a> -->
-<!-- 		<a class="nav-link" th:href="@{/empleado/nuevo}">Nuevo Empleado</a>  -->
-<!-- 		<a class="nav-link" aria-current="page" th:href="@{/proyecto}">Proyectos</a> -->
-<!-- 		<a class="nav-link" th:href="@{/proyecto/nuevo}">Nuevo Proyecto</a> -->
-<!-- 		<a class="nav-link" aria-current="page" th:href="@{/departamento}">Departamentos</a> -->
-<!-- 		<a class="nav-link" th:href="@{/departamento/nuevo}">Nuevo Departamento</a> -->
+		<!-- 		<a class="nav-link" aria-current="page" th:href="@{/empleado}">Empleados</a> -->
+		<!-- 		<a class="nav-link" th:href="@{/empleado/nuevo}">Nuevo Empleado</a>  -->
+		<!-- 		<a class="nav-link" aria-current="page" th:href="@{/proyecto}">Proyectos</a> -->
+		<!-- 		<a class="nav-link" th:href="@{/proyecto/nuevo}">Nuevo Proyecto</a> -->
+		<!-- 		<a class="nav-link" aria-current="page" th:href="@{/departamento}">Departamentos</a> -->
+		<!-- 		<a class="nav-link" th:href="@{/departamento/nuevo}">Nuevo Departamento</a> -->
 	</nav>
 
 
@@ -26,7 +26,8 @@
 			<div
 				class="col-lg-6 col-md-6 col-sm-6 container justify-content-center card">
 				<div class="card-body">
-					<form th:action="@{/producto/{id}(id=${keyproducto.id})}" method="POST" th:object="${keyproducto}">
+					<form th:action="@{/api/producto/{id}(id=${keyproducto.id})}"
+						method="POST" th:object="${keyproducto}">
 						<div class="form-group">
 							<label>Nombre: </label> <input type="text" name="nombre"
 								th:field="*{nombre}" class="form-control"
@@ -34,19 +35,19 @@
 						</div>
 
 						<div class="form-group">
-							<label>Descripcion: </label> <input type="text" name="descripcion"
-								th:field="*{descripcion}" class="form-control"
-								placeholder="Ingrese una descripcion" required>
+							<label>Descripcion: </label> <input type="text"
+								name="descripcion" th:field="*{descripcion}"
+								class="form-control" placeholder="Ingrese una descripcion"
+								required>
 						</div>
 						<div class="form-group">
-							<label>Precio Unitario: </label> <input type="text" name="precioUnitario"
-								th:field="*{precioUnitario}" class="form-control"
-								placeholder="Ingrese el precio" required>
+							<label>Precio Unitario: </label> <input type="text"
+								name="precioUnitario" th:field="*{precioUnitario}"
+								class="form-control" placeholder="Ingrese el precio" required>
 						</div>
 						<div class="form-group">
 							<label>Existencias: </label> <input type="number" name=""
-								th:field="*{existencias}" class="form-control"
-								required>
+								th:field="*{existencias}" class="form-control" required>
 						</div>
 						<br>
 						<button type="submit" class="btn btn-primary">Guardar</button>

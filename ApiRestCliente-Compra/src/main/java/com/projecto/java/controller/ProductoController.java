@@ -28,7 +28,7 @@ public class ProductoController {
 //	Peticion get
 	
 	@GetMapping("/productos")
-	public String hola(Model model) {
+	public String producto(Model model) {
 		model.addAttribute("info", service.findAllProductos());
 
 		return "producto";
@@ -69,33 +69,39 @@ public class ProductoController {
 
 		return "nuevo_producto";
 	}
+	
+	@GetMapping("/producto/editar/{id}")
+	public String findByProducto(@PathVariable Long id, Model modelo) {
+		modelo.addAttribute("keyproducto", service.findById(id));
 
+		return "editar_producto";
+	}
+
+//	Method post
+	
 	@PostMapping("/productos")
 	public String guardarDepartamento(@ModelAttribute("keyproducto") Producto producto) {
 		service.saveProducto(producto);
 		return "redirect:/api/productos";
 	}
 
-//	@GetMapping("/producto/editar/{id}")
-//	public String editarProyecto(@PathVariable Long id, Model modelo) {
-//		modelo.addAttribute("keyproducto", service.saveProducto(producto));
-//		return "editarDepartamento";
-//	}
-//
-//	@PostMapping("/departamento/{id}")
-//	public String actualizarProyecto(@PathVariable Long id,
-//			@ModelAttribute("keyDepartamento") Departamento departamento) {
-//		Departamento departamentoExistente = service.obtenerDepartamento(id);
-//		departamentoExistente.setId(id);
-//		departamentoExistente.setNombre(departamento.getNombre());
-//
-//		service.guardarDepartamento(departamentoExistente);
-//
-//		return "redirect:/departamentos";
-//
-//	}
+	@PostMapping("/producto/{id}")
+	public String updateProducto(@PathVariable Long id, @ModelAttribute("keyproducto") Producto producto) {
 
-	@GetMapping("/api/producto/eliminar/{id}")
+		Producto productoActual = service.findById(id);
+		
+		productoActual.setId(id);
+		productoActual.setNombre(producto.getNombre());
+		productoActual.setDescripcion(producto.getDescripcion());
+		productoActual.setPrecioUnitario(producto.getPrecioUnitario());
+		productoActual.setExistencias(producto.getExistencias());
+
+		service.saveProducto(productoActual);
+
+		return "redirect:/api/productos";
+	}
+
+	@GetMapping("/producto/eliminar/{id}")
 	public String eliminarProducto(@PathVariable Long id) {
 		service.deleteProducto(id);
 		return "redirect:/api/productos";
