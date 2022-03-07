@@ -26,8 +26,8 @@ public class VentasServiceImpl implements VentaService {
 
 	@Override
 	@Transactional
-	public Venta findById(Long id) {
-		return repository.findById(id).orElse(null);
+	public Venta findByFolio(Long folio) {
+		return repository.findById(folio).orElse(null);
 	}
 
 	@Override
