@@ -1,6 +1,5 @@
 package com.projecto.java.controller;
 
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,32 +17,31 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.projecto.java.model.Cliente;
-import com.projecto.java.service.ClienteService;
+import com.projecto.java.model.Venta;
+import com.projecto.java.service.VentaService;
+
+
 
 @RestController
 @RequestMapping("/api")
-public class ClienteController {
+public class VentaController {
 
 	@Autowired
-	private ClienteService servicio;
+	private VentaService servicio;
 
-	@GetMapping("/clientes")
-	public List<Cliente> index() {
-
-		return servicio.findAll();
-
+	@GetMapping("/ventas")
+	public List<Venta> index() {
+		return servicio.findAllVentas();
 	}
 
-	@GetMapping("/clientes/{id}")
-	public ResponseEntity<?> findClienteById(@PathVariable Long id) {
+	@GetMapping("/ventas/{id}")
+	public ResponseEntity<?> findVentaById(@PathVariable Long id) {
 
-		Cliente cliente = null;
+		Venta venta = null;
 		Map<String, Object> response = new HashMap<>();
 
 		try {
-
-			cliente = servicio.findById(id);
+			venta = servicio.findById(id);
 
 		} catch (DataAccessException e) {
 			
@@ -53,25 +51,25 @@ public class ClienteController {
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
-		if (cliente == null) {
+		if (venta == null) {
 
-			response.put("mensaje", "El cliente ID: ".concat(id.toString().concat("no existe en la base de datos")));
+			response.put("mensaje", "La venta ID: ".concat(id.toString().concat("no existe en la base de datos")));
 
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
 		}
 
-		return new ResponseEntity<Cliente>(cliente, HttpStatus.OK);
+		return new ResponseEntity<Venta>(venta, HttpStatus.OK);
 	}	
 
-	@PostMapping("/cliente")
-	public ResponseEntity<?> saveCliente(@RequestBody Cliente cliente) {
+	@PostMapping("/venta")
+	public ResponseEntity<?> saveCliente(@RequestBody Venta venta) {
 
-		Cliente clienteNew = null;
+		Venta ventaNew = null;
 		Map<String, Object> response = new HashMap<>();
 
 		try {
 
-			cliente = servicio.save(cliente);
+			venta = servicio.saveVenta(ventaNew);
 
 		} catch (DataAccessException e) {
 			
@@ -81,34 +79,36 @@ public class ClienteController {
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
-		response.put("mensaje", "El cliente ha sido creado con éxito");
-		response.put("cliente", clienteNew);
+		response.put("mensaje", "La venta ha sido creado con éxito");
+		response.put("venta", ventaNew);
 
 		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
 
 	}
 
-	@PutMapping("/cliente/{id}")
-	public ResponseEntity<?> updateCliente(@RequestBody Cliente cliente, @PathVariable Long id) {
+	@PutMapping("/venta/{id}")
+	public ResponseEntity<?> updateVenta(@RequestBody Venta venta, @PathVariable Long id) {
 
 		Map<String, Object> response = new HashMap<>();
-		Cliente clienteActual = servicio.findById(id);
+		Venta ventaActual = servicio.findById(id);
 
-		if (clienteActual == null) {
+		if (ventaActual == null) {
 
 			response.put("mensaje",
-					"Error: no se pudo editar, el cliente con ID: " + id.toString() + "no existe en la BBDD");
+					"Error: no se pudo editar, la venta con ID: " + id.toString() + "no existe en la BBDD");
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
 
 		}
 
 		try {
-			clienteActual.setNombre(cliente.getNombre());
-			clienteActual.setApellidos(cliente.getApellidos());
-			clienteActual.setSexo(cliente.getSexo());
-			clienteActual.setTelefono(cliente.getTelefono());
+			ventaActual.setProducto(venta.getProducto());
+			ventaActual.setIva(venta.getIva());
+			ventaActual.setCantidad(venta.getCantidad());
+			ventaActual.setSubTotal(venta.getSubTotal());
+			ventaActual.setTotal(venta.getTotal());
+			ventaActual.setCliente(venta.getCliente());
 
-			servicio.save(clienteActual);
+			servicio.saveVenta(ventaActual);
 
 		} catch (DataAccessException e) {
 			
@@ -117,26 +117,26 @@ public class ClienteController {
 
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		response.put("mensaje", "El cliente ha sido actualizado con éxito");
-		response.put("cliente", clienteActual);
+		response.put("mensaje", "La venta ha sido actualizada con éxito");
+		response.put("venta", ventaActual);
 
 		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
 	}
 
-	@DeleteMapping("/cliente/{id}")
-	public ResponseEntity<?> deleteCliente(@PathVariable Long id) {
+	@DeleteMapping("/venta/{id}")
+	public ResponseEntity<?> deleteVenta(@PathVariable Long id) {
 		Map<String, Object> response = new HashMap<>();
-		Cliente clienteActual = servicio.findById(id);
+		Venta ventaActual = servicio.findById(id);
 
-		if (clienteActual == null) {
+		if (ventaActual == null) {
 
 			response.put("mensaje",
-					"Error: no se pudo editar, el cliente con ID: " + id.toString() + "no existe en la BBDD");
+					"Error: no se pudo editar, la venta con ID: " + id.toString() + "no existe en la BBDD");
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
 		}
 
 		try {
-			servicio.delete(id);
+			servicio.deleteVenta(id);
 
 		} catch (DataAccessException e) {
 			
@@ -144,14 +144,13 @@ public class ClienteController {
 			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
 
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+		} 
 
-		response.put("cliente", clienteActual);
-		response.put("mensaje", "Se ha borrado con exito el cliente");
+		response.put("venta", ventaActual);
+		response.put("mensaje", "Se ha borrado con exito la venta");
 
 		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
 	}
-
 }
 
 
