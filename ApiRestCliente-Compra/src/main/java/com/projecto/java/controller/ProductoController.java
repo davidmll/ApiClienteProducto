@@ -28,7 +28,7 @@ public class ProductoController {
 
 //	Methods Get
 
-	@GetMapping({ "/productos", "/todos" })
+	@GetMapping("/productos")
 	public List<Producto> index() {
 		return servicio.findAllProductos();
 	}
