@@ -10,6 +10,9 @@
 </head>
 <body>
 	<h1>Listado de productos</h1>
+	<button type="button" class="btn btn-primary">
+		<a href="/api/producto/nuevo_producto">Add</a>
+	</button>
 	<table class="table">
 		<thead>
 			<tr>
@@ -19,7 +22,6 @@
 				<th scope="col">P.Unitario</th>
 				<th scope="col">Existencias</th>
 				<th></th>
-
 			</tr>
 		</thead>
 		<tbody>
@@ -32,14 +34,10 @@
 
 				<td>
 					<button type="button" class="btn btn-danger">
-<!-- 						<a -->
-<!-- 							th:href="@{/api/producto/eliminar/{id}(id=${productos.id})}">Delete</a> -->
-							Delete
+					<a th:href="@{/api/producto/eliminar/{id}(id=${productos.id})}">Delete</a> 
 					</button>
 					<button type="button" class="btn btn-warning">
-<!-- 						<a -->
-<!-- 							th:href="@{/departamento/editar/{id}(id=${departamentos.idDepartamento})}">Edit</a> -->
-							Update
+						<a 	th:href="@{/api/producto/editar/{id}(id=${productos.id})}">Edit</a>
 					</button>
 				</td>
 
