@@ -1,36 +1,37 @@
 package com.projecto.java.controller;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
+
 import com.projecto.java.model.Producto;
 import com.projecto.java.service.ProductoService;
 
 @Controller
 @RequestMapping("/api")
 public class ProductoController {
-	
+
 	@Autowired
-	private ProductoService servicio;
+	private ProductoService service;
 
-//	Methods Get
-
+	
+//	Peticion get
+	
 	@GetMapping("/productos")
-	public List<Producto> index() {
-		return servicio.findAllProductos();
+	public String hola(Model model) {
+		model.addAttribute("info", service.findAllProductos());
+
+		return "producto";
 	}
 
 	@GetMapping("producto/{id}")
@@ -42,7 +43,7 @@ public class ProductoController {
 
 		try {
 
-			producto = servicio.findById(id);
+			producto = service.findById(id);
 
 		} catch (DataAccessException e) {
 
@@ -61,104 +62,43 @@ public class ProductoController {
 
 	}
 
-//	Method Post
+	@GetMapping("/producto/nuevo_producto")
+	public String crearProducto(Model model) {
+		Producto p = new Producto();
+		model.addAttribute("keyproducto", p);
 
-	@PostMapping("/producto")
-	public ResponseEntity<?> saveProducto(@RequestBody Producto producto) {
-		Producto productoNew = null;
-
-		Map<String, Object> response = new HashMap<>();
-
-		try {
-
-			productoNew = servicio.saveProducto(producto);
-
-		} catch (DataAccessException e) {
-
-			response.put("mensaje", "Error al realizar un insert en la base de datos");
-			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
-
-			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-
-		response.put("mensaje", productoNew);
-		response.put("producto", "El producto ha sido creado con éxito");
-
-		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
-
+		return "nuevo_producto";
 	}
 
-//	Method Put
-
-	@PutMapping("/producto/{id}")
-	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> updateProducto(@RequestBody Producto producto, @PathVariable Long id) {
-
-		Producto productoUpdate = servicio.findById(id);
-
-		Map<String, Object> response = new HashMap<>();
-
-		if (productoUpdate == null) {
-			response.put("mensaje", "Error: no se puedo editar el producto con ID: " + id);
-			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
-		}
-
-		try {
-			productoUpdate.setId(id);
-			productoUpdate.setNombre(producto.getNombre());
-			productoUpdate.setDescripcion(producto.getDescripcion());
-			productoUpdate.setPrecioUnitario(producto.getPrecioUnitario());
-			productoUpdate.setExistencias(producto.getExistencias());
-			
-
-			servicio.saveProducto(productoUpdate);
-		} catch (DataAccessException e) {
-
-			response.put("mensaje", "Error al realizar un update en la base de datos");
-			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
-
-			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-
-		response.put("producto", productoUpdate);
-		response.put("mensaje", "El producto ha sido actualizado con éxito");
-
-		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
+	@PostMapping("/productos")
+	public String guardarDepartamento(@ModelAttribute("keyproducto") Producto producto) {
+		service.saveProducto(producto);
+		return "redirect:/api/productos";
 	}
 
-//	Method Delete
+//	@GetMapping("/producto/editar/{id}")
+//	public String editarProyecto(@PathVariable Long id, Model modelo) {
+//		modelo.addAttribute("keyproducto", service.saveProducto(producto));
+//		return "editarDepartamento";
+//	}
+//
+//	@PostMapping("/departamento/{id}")
+//	public String actualizarProyecto(@PathVariable Long id,
+//			@ModelAttribute("keyDepartamento") Departamento departamento) {
+//		Departamento departamentoExistente = service.obtenerDepartamento(id);
+//		departamentoExistente.setId(id);
+//		departamentoExistente.setNombre(departamento.getNombre());
+//
+//		service.guardarDepartamento(departamentoExistente);
+//
+//		return "redirect:/departamentos";
+//
+//	}
 
-	@DeleteMapping("/producto/{id}")
-	public ResponseEntity<?> deleteProducto(@PathVariable Long id) {
-
-		Producto productoDelete = servicio.findById(id);
-		Map<String, Object> response = new HashMap<>();
-
-		if (productoDelete == null) {
-			response.put("mensaje", "Error: no se pudo eliminar el producto con ID: " + id);
-			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
-		}
-		try {
-
-		
-			servicio.deleteProducto(id);
-		} catch (DataAccessException e) {
-
-			response.put("mensaje", "Error al eliminar la información en la base de datos");
-			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
-
-			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-
-		response.put("producto", productoDelete);
-		response.put("mensaje", "El producto ha sido eliminado con éxito");
-
-		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
+	@GetMapping("/api/producto/eliminar/{id}")
+	public String eliminarProducto(@PathVariable Long id) {
+		service.deleteProducto(id);
+		return "redirect:/api/productos";
 	}
-
-	
-	
-	
-
 
 }

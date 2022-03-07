@@ -13,7 +13,6 @@
 	<table class="table">
 		<thead>
 			<tr>
-				<th scope="col">#</th>
 				<th scope="col">Clave</th>
 				<th scope="col">Nombre</th>
 				<th scope="col">Descripcion</th>
@@ -25,21 +24,23 @@
 		</thead>
 		<tbody>
 			<tr th:each="productos:${info}">
-				<th scope="row" th:text="${productos.id}"></th>
+				<td th:text="${productos.id}"></td>
 				<td th:text="${productos.nombre}"></td>
 				<td th:text="${productos.descripcion}"></td>
 				<td th:text="${productos.precioUnitario}"></td>
 				<td th:text="${productos.existencias}"></td>
 
 				<td>
-<!-- 					<button type="button" class="btn btn-danger"> -->
+					<button type="button" class="btn btn-danger">
 <!-- 						<a -->
-<!-- 							th:href="@{/departamento/eliminar/{id}(id=${departamentos.idDepartamento})}">Delete</a> -->
-<!-- 					</button> -->
-<!-- 					<button type="button" class="btn btn-warning"> -->
+<!-- 							th:href="@{/api/producto/eliminar/{id}(id=${productos.id})}">Delete</a> -->
+							Delete
+					</button>
+					<button type="button" class="btn btn-warning">
 <!-- 						<a -->
 <!-- 							th:href="@{/departamento/editar/{id}(id=${departamentos.idDepartamento})}">Edit</a> -->
-<!-- 					</button> -->
+							Update
+					</button>
 				</td>
 
 			</tr>
