@@ -64,8 +64,6 @@ public class ClienteController {
 	public String crearCliente(Model model) {
 		Cliente p = new Cliente();
 		model.addAttribute("keycliente", p);
-
-		return "nuevo_cliente";
 	}
 	
 
@@ -83,7 +81,7 @@ public class ClienteController {
 	}
 	
 	@PostMapping("/cliente/{id}")
-	public String updateClienteo(@PathVariable Long id, @ModelAttribute("keycliente") Cliente cliente) {
+	public String updateCliente(@PathVariable Long id, @ModelAttribute("keycliente") Cliente cliente) {
 
 		Cliente clienteActual = service.findById(id);
 		
