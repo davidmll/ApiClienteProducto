@@ -17,11 +17,20 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Table(name="ventas")
 public class Venta implements Serializable {
 
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
 	
+	
+	public Venta() {
+	}
+	public Venta(Producto producto, Cliente cliente, int cantidad, double subTotal, int iva, double total) {
+		this.producto = producto;
+		this.cliente = cliente;
+		this.cantidad = cantidad;
+		this.subTotal = subTotal;
+		this.iva = iva;
+		this.total = total;
+	}
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long folio;
