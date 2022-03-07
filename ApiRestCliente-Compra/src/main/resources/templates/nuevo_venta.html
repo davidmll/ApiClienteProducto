@@ -6,65 +6,103 @@
 <!-- CSS only -->
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
-	rel="stylesheet"
-	integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
-	crossorigin="anonymous">
+	rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="../static/index.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Hubballi&display=swap" rel="stylesheet">
+<style>
+	h1{font-family: 'Hubballi', cursive;text-align: center}
+</style>
 </head>
 <body>
 
-<nav class="nav">
-	<div class="container-fluid">
-  		<a class="nav-link" aria-current="page" th:href="@{ventas}">Ventas</a>
-  		<a class="nav-link" th:href="@{/venta/nuevo}">Nueva Venta</a>
-  
-  	</div>
-</nav>
+	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+		<div class="container-fluid">
+			<a class="navbar-brand" href="#">ForoVentas</a>
+			<button class="navbar-toggler" type="button"
+				data-bs-toggle="collapse" data-bs-target="#navbarNav"
+				aria-controls="navbarNav" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNav">
+				<ul class="navbar-nav">
+					<li class="nav-item"><a class="nav-link active"
+						aria-current="page" th:href="@{ventas}">Ventas</a></li>
+					<li class="nav-item"><a class="nav-link" th:href="@{clientes}">Cliente</a>
+					</li>
+					<li class="nav-item"><a class="nav-link"
+						th:href="@{productos}">Producto</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
 
-<div class="container">
-	<div class="row">
-		<h1>Nueva Venta</h1>
-			
-			
-			<div class="col-lg6 col-md-6 col-sm-6 container justify-content-center card">
+	<div class="container">
+		<div class="row">
+			<h1>Nueva Venta</h1>
+
+
+			<div
+				class="col-lg6 col-md-6 col-sm-6 container justify-content-center card">
 				<div class="card-body">
-					<form th:action="@{/api/ventas}" method="POST" th:object="${keyventa}">
-					
+					<form th:action="@{/api/ventas}" method="POST"
+						th:object="${keyventa}">
+
 						<div class="form-group">
-							<label>Cantidad:</label>
-							<input type="number" name="cantidad" th:field="*{cantidad}" class="form-control" placeholder="Ingrese la cantidad" required></input>
+							<label>Cantidad:</label> <input type="number" name="cantidad"
+								th:field="*{cantidad}" class="form-control"
+								placeholder="Ingrese la cantidad" required></input>
 						</div>
-						
+
 						<div class="form-group">
-							<label>Subtotal:</label>
-							<input type="number" name="subTotal" th:field="*{subTotal}" class="form-control" placeholder="Ingrese el subtotal" required></input>
+							<label>Subtotal:</label> <input type="number" name="subTotal"
+								th:field="*{subTotal}" class="form-control"
+								placeholder="Ingrese el subtotal" required></input>
 						</div>
-						
+
 						<div class="form-group">
-							<label>IVA:</label>
-							<input type="number" name="iva" th:field="*{iva}" class="form-control" placeholder="Ingrese el iva" required></input>
+							<label>IVA:</label> <input type="number" name="iva"
+								th:field="*{iva}" class="form-control"
+								placeholder="Ingrese el iva" required></input>
 						</div>
-						
+
 						<div class="form-group">
-							<label>Total:</label>
-							<input type="number" name="total" th:field="*{total}" class="form-control" placeholder="Total" required></input>
+							<label>Total:</label> <input type="number" name="total"
+								th:field="*{total}" class="form-control" placeholder="Total"
+								required></input>
 						</div>
-						
+
+						<div class="form-group">
+							<label>N.Cliente</label> <input type="number" name="total"
+								th:field="*{cliente.id}" class="form-control"
+								placeholder="Total" required></input>
+						</div>
+
+						<div class="form-group">
+							<label>N.Producto</label> <input type="number" name="total"
+								th:field="*{producto.id}" class="form-control"
+								placeholder="Total" required></input>
+						</div>
+
 						<br>
 						<div class="box-footer">
-							<button type="submit" class="btn btn-success">Guardar Venta</button>
-						
+							<button type="submit" class="btn btn-success">Guardar
+								Venta</button>
+
 						</div>
-						
-						
-						
+
+
+
 					</form>
 				</div>
 			</div>
+		</div>
 	</div>
-</div>
-	
-		
-	
+
+
+
 
 
 
