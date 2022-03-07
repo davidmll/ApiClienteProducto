@@ -95,8 +95,7 @@ public class ClienteController {
 
 		if (clienteActual == null) {
 
-			response.put("mensaje",
-					"Error: no se pudo editar, el cliente con ID: " + id.toString() + "no existe en la BBDD");
+			response.put("mensaje","Error: no se pudo editar, el cliente con ID: " + id.toString() + "no existe en la BBDD");
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
 
 		}

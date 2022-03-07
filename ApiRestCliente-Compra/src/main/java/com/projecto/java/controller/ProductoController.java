@@ -24,9 +24,8 @@ public class ProductoController {
 	@Autowired
 	private ProductoService service;
 
-	
 //	Peticion get
-	
+
 	@GetMapping("/productos")
 	public String producto(Model model) {
 		model.addAttribute("info", service.findAllProductos());
@@ -47,14 +46,14 @@ public class ProductoController {
 
 		} catch (DataAccessException e) {
 
-			response.put("mensaje", "Error al realizar la consulta");
-			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
+			System.out.println("Error al realizar la consulta");
+			System.out.println(e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
 
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 		if (producto == null) {
-			response.put("mensaje", "El producto ID: " + id + " no existe en la base de datos");
+			System.out.println("El producto ID: " + id + " no existe en la base de datos");
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
 		}
 
@@ -69,7 +68,7 @@ public class ProductoController {
 
 		return "nuevo_producto";
 	}
-	
+
 	@GetMapping("/producto/editar/{id}")
 	public String findByProducto(@PathVariable Long id, Model modelo) {
 		modelo.addAttribute("keyproducto", service.findById(id));
@@ -78,10 +77,22 @@ public class ProductoController {
 	}
 
 //	Method post
-	
+
 	@PostMapping("/productos")
 	public String guardarDepartamento(@ModelAttribute("keyproducto") Producto producto) {
-		service.saveProducto(producto);
+
+		Map<String, Object> response = new HashMap<>();
+
+		try {
+			service.saveProducto(producto);
+		} catch (DataAccessException e) {
+
+			System.out.println( "Error al realizar un insert a la base de datos");
+			System.out.println(e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
+			new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
 		return "redirect:/api/productos";
 	}
 
@@ -89,21 +100,58 @@ public class ProductoController {
 	public String updateProducto(@PathVariable Long id, @ModelAttribute("keyproducto") Producto producto) {
 
 		Producto productoActual = service.findById(id);
-		
-		productoActual.setId(id);
-		productoActual.setNombre(producto.getNombre());
-		productoActual.setDescripcion(producto.getDescripcion());
-		productoActual.setPrecioUnitario(producto.getPrecioUnitario());
-		productoActual.setExistencias(producto.getExistencias());
+		Map<String, Object> response = new HashMap<>();
 
-		service.saveProducto(productoActual);
+		if (productoActual == null) {
+			System.out.println("Error: no se pudo editar el producto con ID: " + id.toString() + "no existe en la BBDD");
+			new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
+
+		}
+
+		try {
+			productoActual.setId(id);
+			productoActual.setNombre(producto.getNombre());
+			productoActual.setDescripcion(producto.getDescripcion());
+			productoActual.setPrecioUnitario(producto.getPrecioUnitario());
+			productoActual.setExistencias(producto.getExistencias());
+
+			service.saveProducto(productoActual);
+		} catch (DataAccessException e) {
+
+			System.out.println("Error al realizar un update a la base de datos");
+			System.out.println( e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
+			new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		System.out.println("El producto ha sido actualizado con éxito");
+		System.out.println( productoActual);
+
+		new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
 
 		return "redirect:/api/productos";
 	}
 
 	@GetMapping("/producto/eliminar/{id}")
 	public String eliminarProducto(@PathVariable Long id) {
-		service.deleteProducto(id);
+
+		Map<String, Object> response = new HashMap<>();
+		Producto productoDelete = service.findById(id);
+
+		if (productoDelete == null) {
+
+			System.out.println("Error: no se pudo eliminar, el producto con ID: " + id.toString() + "no existe en la BBDD");
+			new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
+		}
+
+		try {
+			service.deleteProducto(id);
+		} catch (DataAccessException e) {
+
+			System.out.println( "Error al realizar un delete a la base de datos");
+			System.out.println(e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
+
+			new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 		return "redirect:/api/productos";
 	}
 
