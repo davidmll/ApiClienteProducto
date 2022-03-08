@@ -9,11 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import com.projecto.java.model.Cliente;
 import com.projecto.java.service.ClienteService;
@@ -24,7 +20,8 @@ public class ClienteController {
 
 	@Autowired
 	private ClienteService service;
-
+	
+//	Method Gets
 	
 	@GetMapping("/clientes")
 	public String producto(Model model) {
@@ -61,9 +58,10 @@ public class ClienteController {
 	}
 	
 	@GetMapping("/cliente/nuevo_cliente")
-	public String crearCliente(Model model) {
+	public String crearCliente(Model modelo) {
 		Cliente p = new Cliente();
-		model.addAttribute("keycliente", p);
+		modelo.addAttribute("keycliente", p);
+		return "nuevo_cliente";
 	}
 	
 
@@ -73,6 +71,8 @@ public class ClienteController {
 
 		return "editar_cliente";
 	}
+	
+//	Method Post
 	
 	@PostMapping("/clientes")
 	public String guardarDepartamento(@ModelAttribute("keycliente") Cliente cliente) {
